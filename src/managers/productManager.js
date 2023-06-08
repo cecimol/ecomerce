@@ -5,30 +5,6 @@ class ProductManager {
     this.path = path;
   }
 
-  addProduct(title, description, price, thumbnail, code, stock) {
-    const isCodeNotRepeated = (product) => {
-      return product.code !== code;
-    };
-
-    const products = this.getProducts();
-    if (products.every(isCodeNotRepeated)) {
-      this.lastProductIndex++;
-      const product = {
-        id: products.length ? products.length + 1 : 1,
-        title: title,
-        description: description,
-        price: price,
-        thumbnail: thumbnail,
-        code: code,
-        stock: stock,
-      };
-      products.push(product);
-      fs.writeFileSync(this.path, JSON.stringify(products));
-    } else {
-      console.log("Product code already exists");
-    }
-  }
-
   getProducts() {
     let products = [];
     try {
@@ -53,6 +29,42 @@ class ProductManager {
     return findedProduct;
   }
 
+  addProduct(
+    title,
+    description,
+    price,
+    thumbnails,
+    code,
+    stock,
+    status,
+    category
+  ) {
+    const isCodeNotRepeated = (product) => {
+      return product.code !== code;
+    };
+
+    const products = this.getProducts();
+    if (products.every(isCodeNotRepeated)) {
+      const id = products.length ? products[products.length - 1].id + 1 : 1;
+      const product = {
+        id: id,
+        title: title,
+        description: description,
+        price: price,
+        thumbnails: thumbnails,
+        code: code,
+        stock: stock,
+        status: status,
+        category: category,
+      };
+      products.push(product);
+      fs.writeFileSync(this.path, JSON.stringify(products));
+      return product;
+    } else {
+      return "Product code already exists";
+    }
+  }
+
   updateProduct(id, updateObject) {
     const product = this.getProductById(id);
     if (product) {
@@ -66,11 +78,11 @@ class ProductManager {
             code: product.code,
           };
         }
-        return oldProduct;
       });
       fs.writeFileSync(this.path, JSON.stringify(newProducts));
+      return products.getProductById(id);
     } else {
-      console.log("Product not found");
+      return "Product not found";
     }
   }
 
@@ -79,8 +91,9 @@ class ProductManager {
     const newProducts = products.filter((product) => product.id !== id);
     fs.writeFileSync(this.path, JSON.stringify(newProducts));
     if (products.length === newProducts.length) {
-      console.log("Product not found");
+      return "Product not found";
     }
+    return newProducts;
   }
 
   createProducts() {
@@ -88,81 +101,101 @@ class ProductManager {
       "Producto 1",
       "Este es un producto prueba",
       "200",
-      "Sin imagen",
+      [],
       "1",
-      25
+      25,
+      true,
+      "1"
     );
     this.addProduct(
       "Producto 2",
       "Este es un producto prueba",
       "200",
-      "Sin imagen",
+      [],
       "2",
-      25
+      25,
+      true,
+      "2"
     );
     this.addProduct(
       "Producto 3",
       "Este es un producto prueba",
       "200",
-      "Sin imagen",
+      [],
       "3",
-      25
+      25,
+      true,
+      "3"
     );
     this.addProduct(
       "Producto 4",
       "Este es un producto prueba",
       "200",
-      "Sin imagen",
+      [],
       "4",
-      25
+      25,
+      true,
+      "4"
     );
     this.addProduct(
       "Producto 5",
       "Este es un producto prueba",
       "200",
-      "Sin imagen",
+      [],
       "5",
-      25
+      25,
+      true,
+      "5"
     );
     this.addProduct(
       "Producto 6",
       "Este es un producto prueba",
       "200",
-      "Sin imagen",
+      [],
       "6",
-      25
+      25,
+      true,
+      "6"
     );
     this.addProduct(
       "Producto 7",
       "Este es un producto prueba",
       "200",
-      "Sin imagen",
+      [],
       "7",
-      25
+      25,
+      true,
+      "7"
     );
     this.addProduct(
       "Producto 8",
       "Este es un producto prueba",
       "200",
-      "Sin imagen",
+      [],
       "8",
-      25
+      25,
+      true,
+      "8"
     );
     this.addProduct(
       "Producto 9",
       "Este es un producto prueba",
       "200",
-      "Sin imagen",
+      [],
       "9",
-      25
+      25,
+      true,
+      "9"
     );
     this.addProduct(
       "Producto 10",
       "Este es un producto prueba",
       "200",
-      "Sin imagen",
+      [],
       "10",
-      25
+      25,
+      true,
+      "10"
     );
   }
 }

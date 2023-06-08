@@ -1,28 +1,18 @@
 import express from "express";
-import ProductManager from "./productManager.js";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+import productRouter from "./routes/products.routes.js";
+import cartRouter from "./routes/carts.routes.js";
 
 const app = express();
-const productManager = new ProductManager("products.txt");
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-app.post("/products", (req, res) => {
-  productManager.createProducts();
-  const products = productManager.getProducts();
-  res.send({ products });
-});
+// Use public folder
+app.use("/static", express.static(__dirname + "/public"));
 
-app.get("/products", (req, res) => {
-  const limit = req.query.limit;
-  const products = limit
-    ? productManager.getProducts().slice(0, limit)
-    : productManager.getProducts();
-  res.send({ products });
-});
-
-app.get("/products/:pid", (req, res) => {
-  const pid = req.params.pid;
-  const product = productManager.getProductById(parseInt(pid));
-  const response = product ? { product } : { error: "Product not found" };
-  res.send(response);
-});
+// Use Routes
+app.use("/api/products", productRouter);
+app.use("/api/carts", cartRouter);
 
 app.listen(8080, () => console.log("Servidor funcionando en el puerto 8080"));
