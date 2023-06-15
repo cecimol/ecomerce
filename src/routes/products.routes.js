@@ -1,15 +1,12 @@
 import { Router } from "express";
-import { fileURLToPath } from "url";
-import { dirname, resolve } from "path";
+import { resolve } from "path";
+import __dirname from "../utils.js";
 import ProductManager from "../managers/productManager.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 const productRouter = Router();
 
 const productManager = new ProductManager(
-  resolve(__dirname, "../data/products.json")
+  resolve(__dirname, "../src/data/products.json")
 );
 
 productRouter.get("/", (req, res) => {
@@ -46,6 +43,9 @@ productRouter.post("/", (req, res) => {
   );
   if (product === "Product code already exists") {
     res.send({ error: product });
+  } else {
+    const io = req.app.get("socketServer");
+    io.emit("product_created", product);
   }
   res.send({ product });
 });
@@ -63,7 +63,10 @@ productRouter.delete("/:pid", (req, res) => {
   const pid = req.params.pid;
   const products = productManager.deleteProduct(parseInt(pid));
   if (products === "Product not found") {
-    res.send({ error: product });
+    res.send({ error: products });
+  } else {
+    const io = req.app.get("socketServer");
+    io.emit("product_deleted", pid);
   }
   res.send({ products });
 });

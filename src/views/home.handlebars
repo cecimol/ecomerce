@@ -1,0 +1,33 @@
+<head>
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+  <h1>Products</h1>
+  <br />
+  <table class="border">
+    <thead>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Price</th>
+      <th>Thumbnails</th>
+      <th>Code</th>
+      <th>Stock</th>
+      <th>Status</th>
+      <th>Category</th>
+    </thead>
+    <tbody>
+      {{#each products}}
+        <tr>
+          <td class="border">{{this.title}}</td>
+          <td class="border">{{this.description}}</td>
+          <td class="border">{{this.price}}</td>
+          <td class="border">{{this.thumbails}}</td>
+          <td class="border">{{this.code}}</td>
+          <td class="border">{{this.stock}}</td>
+          <td class="border">{{this.status}}</td>
+          <td class="border">{{this.category}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</body>

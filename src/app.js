@@ -1,21 +1,42 @@
 import express from "express";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
+import { Server } from "socket.io";
+import handlebars from "express-handlebars";
+import __dirname from "./utils.js";
 import productRouter from "./routes/products.routes.js";
 import cartRouter from "./routes/carts.routes.js";
+import viewsRouter from "./routes/views.routes.js";
 
 const app = express();
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Use public folder
-app.use("/static", express.static(__dirname + "/public"));
+app.use(express.static(__dirname + "/public"));
 
 // Use Routes
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
+app.use("/", viewsRouter);
 
-app.listen(8080, () => console.log("Servidor funcionando en el puerto 8080"));
+// handlebars
+app.engine("handlebars", handlebars.engine());
+app.set("views", __dirname + "/views");
+app.set("view engine", "handlebars");
+
+// http server
+const httpServer = app.listen(8080, () =>
+  console.log("Servidor funcionando en el puerto 8080")
+);
+
+// socket.io server
+const socketServer = new Server(httpServer);
+socketServer.on("connection", (socket) => {
+  console.log("Websocket iniciado");
+
+  socket.on("message", (data) => {
+    console.log(data);
+  });
+});
+
+app.set("socketServer", socketServer);
