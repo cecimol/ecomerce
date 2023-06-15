@@ -43,23 +43,47 @@ class CartManager {
     return cart;
   }
 
+  init() {
+    this.addCart([
+      {
+        product: 1,
+        quantity: 5,
+      },
+      {
+        product: 5,
+        quantity: 4,
+      },
+    ]);
+    this.addCart([
+      {
+        product: 3,
+        quantity: 1,
+      },
+      {
+        product: 8,
+        quantity: 9,
+      },
+    ]);
+    return this.getCarts();
+  }
+
   addProductTocart(cartId, productId) {
     const cart = this.getCartById(cartId);
-    if (cart && cart.length) {
+    if (cart) {
       const newCarts = this.getCarts().filter((cart) => cart.id !== cartId);
       const productIndexInCart = cart.products.findIndex(
-        (product) => product.id === productId
+        (product) => product.product === productId
       );
       if (productIndexInCart === -1) {
         // The product is not in the cart
-        cart.products.push({ id: productId, quantity: 1 });
+        cart.products.push({ product: productId, quantity: 1 });
       } else {
         cart.products[productIndexInCart].quantity =
           cart.products[productIndexInCart].quantity + 1;
       }
       newCarts.push(cart);
       fs.writeFileSync(this.path, JSON.stringify(newCarts));
-      return carts.getCartById(cartId);
+      return this.getCartById(cartId);
     } else {
       return "Cart not found";
     }

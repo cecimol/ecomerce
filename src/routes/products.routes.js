@@ -20,7 +20,7 @@ productRouter.get("/", (req, res) => {
   res.send({ products });
 });
 
-productRouter.get("/init", (req, res) => {
+productRouter.post("/init", (req, res) => {
   productManager.createProducts();
   const products = productManager.getProducts();
   res.send({ products });
@@ -50,16 +50,18 @@ productRouter.post("/", (req, res) => {
   res.send({ product });
 });
 
-productRouter.put("/", (req, res) => {
-  const product = productManager.updateProduct(req.body.id, ...req.body);
+productRouter.put("/:pid", (req, res) => {
+  const pid = req.params.pid;
+  const product = productManager.updateProduct(parseInt(pid), req.body);
   if (product === "Product not found") {
     res.send({ error: product });
   }
   res.send({ product });
 });
 
-productRouter.delete("/", (req, res) => {
-  const products = productManager.deleteProduct(req.body.id);
+productRouter.delete("/:pid", (req, res) => {
+  const pid = req.params.pid;
+  const products = productManager.deleteProduct(parseInt(pid));
   if (products === "Product not found") {
     res.send({ error: product });
   }

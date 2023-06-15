@@ -77,10 +77,12 @@ class ProductManager {
             id: product.id,
             code: product.code,
           };
+        } else {
+          return oldProduct;
         }
       });
       fs.writeFileSync(this.path, JSON.stringify(newProducts));
-      return products.getProductById(id);
+      return this.getProductById(id);
     } else {
       return "Product not found";
     }

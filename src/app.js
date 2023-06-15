@@ -8,6 +8,9 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // Use public folder
 app.use("/static", express.static(__dirname + "/public"));
 
